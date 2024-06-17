@@ -4,14 +4,25 @@ import { MdOutlineClose } from "react-icons/md";
 import Button from "./Button";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addTodo } from "../slices/todoSlice";
+import { addTodo, updateTodo } from "../slices/todoSlice";
 import { v4 as uuid } from "uuid";
 import toast from "react-hot-toast";
+import { useEffect } from "react";
 
-const TodoModal = ({ type, modalOpen, setModalOpen }) => {
+const TodoModal = ({ type, modalOpen, setModalOpen, todos }) => {
   const [title, setTitle] = useState("");
   const [status, setStatus] = useState("incomplete");
   const dispatch = useDispatch();
+
+  useEffect(()=>{
+    if(type==='Update' && todos){
+      setTitle(todos.title);
+      setStatus(todos.status);
+    }else{
+      setTitle('')
+      setStatus('incomplete')
+    }
+  }, [type, todos, modalOpen])
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -32,7 +43,13 @@ const TodoModal = ({ type, modalOpen, setModalOpen }) => {
         setModalOpen(false);
       }
       if(type==='Update'){
-        console.log('updating task')
+        if(todos.title!=title || todos.status != status ){
+        dispatch(updateTodo({...todos, title, status}))
+        toast.success('Todos updated successfully')
+        setModalOpen(false);
+        }else{
+          toast.error('No changes made');
+        }
       }
     } else {
       toast.error("Title Should not be Empty");
