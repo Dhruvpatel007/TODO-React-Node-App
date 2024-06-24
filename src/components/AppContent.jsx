@@ -5,15 +5,25 @@ import TodoItem from './TodoItem';
 const AppContent = () => {
 
   const todoList = useSelector((state)=>state.todo.todoList);
-  console.log(todoList)
+  const filterStatus = useSelector((state)=>state.todo.filterStatus);
+  console.log(filterStatus)
   const sortedTodoList = [...todoList];
 
   sortedTodoList.sort((a,b)=> new Date(b.time) - new Date(a.time));
 
+  const filteredTodoList = sortedTodoList.filter((item)=>{
+   if(filterStatus==='all'){
+    return true;
+   }
+   return item.status===filterStatus;
+  })
+
+  console.log(filteredTodoList);
+
   return (
     <div>
-     {sortedTodoList && sortedTodoList.length > 0 ? 
-     sortedTodoList.map((todo)=> <TodoItem key={todo.id} todo={todo}/>)
+     {filteredTodoList && filteredTodoList.length > 0 ? 
+     filteredTodoList.map((todo)=> <TodoItem key={todo.id} todo={todo}/>)
      : 'please add lodolist'}
     </div>
   )
