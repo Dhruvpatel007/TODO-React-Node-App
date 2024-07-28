@@ -1,3 +1,4 @@
+
 import React from "react";
 import styles from "../styles/modules/modal.module.scss";
 import { MdOutlineClose } from "react-icons/md";
